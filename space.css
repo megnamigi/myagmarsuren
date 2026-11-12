@@ -1,0 +1,123 @@
+/* A quiet entrance. The solar system is revealed only after entering. */
+:root{--bg:#07152c;--text:#eef4ff;--muted:#afbfda;--line:#8baadb36;--accent:#8db7ff}
+[hidden]{display:none!important}
+html,body{height:100%;overflow:hidden}body{min-height:0}
+.sr-only{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
+.galaxy{background:linear-gradient(150deg,#030b1c 0%,#081b39 58%,#102f55 100%)}
+.galaxy-nebula{background:radial-gradient(ellipse at 75% 73%,#246fc125,transparent 46%),radial-gradient(ellipse at 40% 100%,#365a9324,transparent 45%);opacity:.8}
+.meteor{display:none}
+.day-sky{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#bfe5ff url('assets/clear-sky-day.png') right center/cover no-repeat;opacity:0;visibility:hidden}
+.day-sky:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#e2f3ff6e,transparent 75%)}
+html[data-theme=light]{--bg:#d9eeff;--panel:#e4f3ff;--text:#092645;--muted:#365974;--line:#153e6b3d;--accent:#1b58a5}
+html[data-theme=light] .day-sky{opacity:1;visibility:visible}
+.landing-screen{height:100svh;max-height:none;display:block;padding:0;position:relative;isolation:isolate}
+.landing-screen:before{display:none}
+.screen-identity{position:absolute;left:3.5vw;right:3.5vw;top:6.3vh;padding:0;z-index:3;pointer-events:none;transition:top .8s,left .8s}
+.screen-identity h1{font-size:clamp(34px,10.1vw,180px);font-weight:800;letter-spacing:-.075em;line-height:.94;margin:0;white-space:nowrap;transition:font-size .8s cubic-bezier(.2,.7,.2,1)}
+.screen-role{font-size:clamp(16px,3.25vw,52px);font-weight:750;letter-spacing:-.048em;line-height:1.1;margin:12px 0 0;transition:font-size .8s}
+.landing-console{position:absolute;left:14vw;bottom:18vh;width:320px;max-width:calc(100vw - 40px);padding:0;z-index:6;transition:left .8s,bottom .8s}
+.entry-invitation{font:11px/1.9 var(--mono);color:var(--muted);max-width:315px;margin:0 0 25px;padding-bottom:15px;border-bottom:1px solid var(--line);letter-spacing:.025em;text-wrap:pretty}
+.console-preferences{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:0 0 25px}
+.segmented{display:flex;gap:2px;padding:4px;border:1px solid var(--line);border-radius:40px;background:#0a1b331f;backdrop-filter:blur(8px)}
+.segmented button{font:10px var(--mono);letter-spacing:.075em;min-width:98px;min-height:36px;display:flex;align-items:center;justify-content:center;gap:9px;padding:9px 15px;background:transparent;color:var(--muted);border-radius:30px}
+.segmented button.active{color:#092442;background:#eaf3ff}.segmented button:hover:not(.active){background:#bdd7ff12;color:var(--text)}
+.screen-enter{width:220px;min-height:53px;display:flex;align-items:center;justify-content:space-between;gap:15px;background:#071a3014;backdrop-filter:blur(8px);color:var(--text);border:1px solid #b8d4f2bd;border-radius:40px;padding:16px 22px;font:10px var(--mono);letter-spacing:.07em;transition:background .3s,transform .3s}
+.screen-enter>span:last-child{font-size:17px}.screen-enter:hover{transform:translateY(-2px);background:#b9d7ff15;filter:none}
+.city-coordinates{position:absolute;right:3.5vw;bottom:8vh;width:215px;padding:18px 19px 15px;border:1px solid var(--line);border-radius:13px;background:#081d361a;backdrop-filter:blur(10px);z-index:6;font:10px var(--mono);letter-spacing:.04em}
+.city-name{display:block;color:var(--muted);font-size:9px;letter-spacing:.14em;margin-bottom:15px}.city-coordinates dl{margin:0}.city-coordinates dl>div{display:flex;justify-content:space-between;gap:15px;padding-block:7px;border-top:1px solid var(--line)}.city-coordinates dt{font-size:8px;color:var(--muted)}.city-coordinates dd{margin:0;white-space:nowrap}
+.screen-header{position:absolute;left:3.5vw;right:3.5vw;top:23px;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.screen-home{font-size:22px;letter-spacing:-1.5px;font-weight:750;background:transparent;padding:8px 0;display:flex;gap:8px}.screen-home span{color:var(--accent);font-weight:400}
+.screen-header nav{gap:28px;font:10px var(--mono);text-transform:uppercase}.screen-header nav button{color:var(--muted);padding:12px 0;background:none}.screen-header nav button:hover{color:var(--text)}
+.cosmos-stage{position:absolute;inset:24% 3% 14% 19%;z-index:2;animation:space-reveal 1.6s cubic-bezier(.1,.7,.2,1) both;overflow:visible}
+#solar-canvas,.planet-controls{position:absolute;inset:0;width:100%;height:100%}#solar-canvas{pointer-events:none;display:block}
+.planet-controls{pointer-events:none}.planet-button{position:absolute;display:block;pointer-events:auto;touch-action:manipulation;border:0;border-radius:50%;background:transparent;padding:0;min-width:24px;min-height:24px;transform:translate(-50%,-50%);outline-offset:4px}
+.planet-surface{display:none;position:absolute;inset:0;border-radius:50%;background-position:center;background-size:auto 100%;box-shadow:inset -12px -8px 18px #000b;transform:scale(var(--planet-scale,1))}.flat-fallback .planet-surface{display:block}.flat-fallback [data-planet=sun] .planet-surface{box-shadow:0 0 35px #fb8f2750}.flat-fallback [data-planet=saturn] .planet-surface:after{content:"";position:absolute;inset:22% -46%;border:8px solid #b0a18490;border-radius:50%;transform:rotate(-25deg)}
+.planet-button:hover,.planet-button:focus-visible,.planet-button[aria-pressed=true]{filter:none}.planet-button:focus-visible{outline:1px solid #a5caff8c}
+.planet-tag{position:absolute;top:100%;left:50%;transform:translate(-50%,10px);opacity:0;pointer-events:none;color:#eaf2ff;background:#07182ce8;border:1px solid #8daee752;backdrop-filter:blur(10px);padding:7px 10px;border-radius:5px;white-space:nowrap;font:10px var(--mono);line-height:1.3;transition:opacity .25s,transform .25s}
+.planet-button:hover .planet-tag,.planet-button:focus-visible .planet-tag,.planet-button[aria-pressed=true] .planet-tag{opacity:1;transform:translate(-50%,5px)}
+.planet-button:hover,.planet-button:focus-visible,.planet-button[aria-pressed=true]{z-index:20}
+.scene-fallback{position:absolute;top:40%;left:25%;max-width:280px;color:var(--muted);font-size:13px;line-height:1.8}
+html[data-experience=entered] .screen-identity{top:95px}
+html[data-experience=entered] .screen-identity h1{font-size:clamp(30px,5vw,72px)}
+html[data-experience=entered] .screen-role{font-size:clamp(12px,1.5vw,21px);margin-top:9px}
+html[data-experience=entered] .landing-console{left:3.5vw;bottom:7vh;width:auto}
+html[data-experience=entered] .console-preferences{margin:0}
+html[data-experience=entered] .city-coordinates{bottom:5vh}
+html[data-theme=light] .segmented{background:#edf8ff30}
+html[data-theme=light] .segmented button.active{background:#10375e;color:#edf6ff}
+html[data-theme=light] .screen-enter{border-color:#163e68a1;background:#e4f4ff20}
+html[data-theme=light] .planet-tag{color:#153c65;background:#edf8fff2;border-color:#8bb9ddbd}
+html[data-theme=light] .city-coordinates{background:#eff9ff26}
+html[data-theme=light] .site-panel,html[data-theme=light] .project-dialog{background:#e8f5ff}
+.asset-credit{margin:30px 0 0;font:9px/1.9 var(--mono);color:var(--muted)}.asset-credit a{text-decoration:underline;text-underline-offset:3px}
+@keyframes space-reveal{from{opacity:0;transform:scale(.9) translateY(25px)}to{opacity:1;transform:none}}
+html[data-journey=launch]::view-transition-old(root){animation:leave-earth .85s ease both}html[data-journey=launch]::view-transition-new(root){animation:arrive-space 1.2s ease both}
+html[data-journey=land]::view-transition-old(root){animation:leave-earth .85s ease both}html[data-journey=land]::view-transition-new(root){animation:arrive-space 1.2s ease both}
+@keyframes leave-earth{to{opacity:0;transform:scale(1.03)}}@keyframes arrive-space{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+@media(min-width:1700px){.screen-identity h1{font-size:10.1vw}}
+@media(max-width:760px){.screen-identity{top:10vh;left:6vw;right:6vw}.screen-identity h1{font-size:9.4vw}.screen-role{font-size:4.25vw;margin-top:12px}.landing-console{left:7vw;bottom:27vh;width:285px}.entry-invitation{font-size:10px;margin-bottom:20px;max-width:270px}.segmented button{font-size:9px;min-width:91px;min-height:36px}.screen-enter{width:214px;font-size:9px}.city-coordinates{right:6vw;bottom:5vh;width:200px;padding:13px 15px 10px}.city-name{margin-bottom:10px;font-size:8px}.screen-header{left:6vw;right:6vw;top:17px}.screen-header nav{gap:18px;font-size:8px}.screen-home{font-size:20px}html[data-experience=entered] .screen-identity{top:93px;left:6vw}html[data-experience=entered] .screen-identity h1{font-size:7vw}html[data-experience=entered] .screen-role{font-size:12px}.cosmos-stage{inset:25% 3% 27%}html[data-experience=entered] .landing-console{left:6vw;bottom:5vh}.city-coordinates dl>div{padding-block:6px}html[data-experience=entered] .city-coordinates{width:158px;right:6vw;font-size:9px;padding:12px}.planet-tag{font-size:9px}}
+@media(max-width:380px){.segmented button{min-width:77px;padding-inline:9px;font-size:8px}.entry-invitation{font-size:9px;max-width:255px}.landing-console{bottom:29vh}.city-coordinates{bottom:4vh}html[data-experience=entered] .city-coordinates{width:140px;padding:10px;font-size:8px}html[data-experience=entered] .city-coordinates dt{font-size:6px}.screen-header nav{gap:13px}.screen-header{gap:10px}}
+@media(max-height:500px) and (orientation:landscape){.screen-identity{top:7vh}.screen-identity h1{font-size:12vh}.screen-role{font-size:4.3vh;margin-top:6px}.landing-console{left:10vw;bottom:9vh;width:300px}.entry-invitation{font-size:8px;margin-bottom:11px;padding-bottom:8px}.console-preferences{flex-direction:row;gap:9px;margin-bottom:12px}.segmented button{font-size:7px;min-width:63px;min-height:27px;padding:5px 7px}.segmented{padding:3px}.screen-enter{min-height:38px;padding:10px 16px;font-size:8px;width:180px}.city-coordinates{bottom:9vh;width:190px;padding:12px}.city-name{margin-bottom:8px}.screen-header{top:10px}.screen-header nav{font-size:8px}html[data-experience=entered] .screen-identity{top:61px}html[data-experience=entered] .screen-identity h1{font-size:25px}html[data-experience=entered] .screen-role{font-size:11px}.cosmos-stage{inset:19% 1% 10% 23%}html[data-experience=entered] .city-coordinates{display:none}html[data-experience=entered] .console-preferences{flex-direction:column;gap:5px}html[data-experience=entered] .landing-console{bottom:8vh}.planet-tag{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.screen-identity,.screen-identity h1,.screen-role,.landing-console,.planet-tag{transition:none}.cosmos-stage{animation:none}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation-duration:0s!important}}
+
+@media(max-width:480px){html[data-experience=entered] .city-coordinates{display:none}}
+/* Inside: quiet navigation above, identity and contact anchored below. */
+.screen-header{gap:25px}.screen-header nav{margin-left:auto;gap:27px}.screen-home{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;padding:0;font-size:17px;letter-spacing:-1px}.screen-home>span{display:none}
+.header-preferences{display:flex;gap:13px}.header-preferences button{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#bfd7ff08;backdrop-filter:blur(8px);font:10px var(--mono);color:var(--text)}.header-preferences [data-toggle-theme]{font-size:22px}.header-preferences button:hover{background:#bdd7ff18}
+html[data-experience=entered] .screen-identity{top:auto;bottom:28px;left:3.5vw;right:auto}html[data-experience=entered] .screen-identity h1{font-size:clamp(25px,2.7vw,43px);letter-spacing:-.065em}html[data-experience=entered] .screen-role{font-size:11px;letter-spacing:-.025em;margin-top:7px}
+html[data-experience=entered] .landing-console,html[data-experience=entered] .city-coordinates{display:none}
+.cosmos-stage{inset:14% 3.5% 17%}
+.experience-footer{position:absolute;right:3.5vw;bottom:28px;z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:11px;font:9px var(--mono);letter-spacing:.05em;color:var(--muted)}.experience-footer a{font:inherit;letter-spacing:inherit;text-transform:uppercase}.experience-footer a:hover{color:var(--text)}
+@media(max-width:760px){.screen-header{left:6vw;right:6vw;gap:15px}.screen-header nav{gap:18px;font-size:8px}.header-preferences{gap:8px}.header-preferences button{width:34px;height:34px;font-size:9px}.header-preferences [data-toggle-theme]{font-size:19px}.screen-home{width:36px;height:36px;font-size:15px;border-radius:10px}.cosmos-stage{inset:19% 4% 23%}html[data-experience=entered] .screen-identity{left:6vw;bottom:35px}html[data-experience=entered] .screen-identity h1{font-size:27px}html[data-experience=entered] .screen-role{font-size:9px}.experience-footer{right:6vw;bottom:102px;font-size:8px;gap:9px}}
+@media(max-width:380px){.screen-header{gap:10px}.screen-header nav{gap:12px;font-size:7px}.header-preferences{gap:6px}.header-preferences button{width:30px;height:30px;font-size:8px}.header-preferences [data-toggle-theme]{font-size:17px}.screen-home{width:31px;height:31px;font-size:13px}.cosmos-stage{inset:17% 3% 24%}html[data-experience=entered] .screen-identity h1{font-size:24px}.experience-footer{font-size:7px;bottom:92px}}
+@media(max-height:500px) and (orientation:landscape){.screen-header{top:12px}.screen-home{width:30px;height:30px;font-size:13px}.header-preferences button{width:30px;height:30px}.header-preferences [data-toggle-theme]{font-size:17px}.screen-header nav{font-size:8px}.cosmos-stage{inset:14% 5% 20%}html[data-experience=entered] .screen-identity{bottom:17px}html[data-experience=entered] .screen-identity h1{font-size:24px}html[data-experience=entered] .screen-role{font-size:8px}.experience-footer{bottom:17px;font-size:7px;gap:7px}}
+
+/* Keep the complete contact address readable on narrow screens. */
+.email-link{overflow-wrap:anywhere;min-width:0;max-width:100%}
+
+/* The city card keeps altitude and today's weather in one quiet corner. */
+.city-coordinates{width:245px;min-height:238px}
+.city-weather{border-top:1px solid var(--line);margin-top:8px;padding-top:11px}
+.weather-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:7px;letter-spacing:.06em;color:var(--muted)}
+.weather-heading time{white-space:nowrap;letter-spacing:0;font-size:7px}
+.weather-main{display:grid;grid-template-columns:25px auto minmax(0,1fr);gap:8px;align-items:center;margin-top:10px}
+#weather-icon{font:25px/1 var(--sans);text-align:center;color:var(--accent)}
+#weather-temperature{font:600 25px/1.1 var(--sans);letter-spacing:-.04em;white-space:nowrap}
+#weather-condition{font:9px/1.5 var(--sans);letter-spacing:0;text-align:right;overflow-wrap:break-word}
+#weather-range{font-size:8px;letter-spacing:.03em;margin:8px 0 0;padding-left:33px;color:var(--muted)}
+#weather-status{font-size:8px;line-height:1.6;letter-spacing:0;margin:10px 0;color:var(--muted)}
+.weather-source{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:7px;letter-spacing:.02em;color:var(--muted)}
+.weather-source a:hover{color:var(--text)}#weather-retry{padding:3px 5px;font:8px var(--mono);color:var(--text);background:transparent;border-bottom:1px solid var(--line)}
+@media(max-width:760px){.city-coordinates{width:230px;min-height:216px}.landing-console{bottom:calc(5vh + 240px)}.weather-main{margin-top:9px}#weather-temperature{font-size:23px}}
+@media(max-width:760px) and (max-height:720px) and (orientation:portrait){.landing-console{top:27vh;bottom:auto;width:calc(100vw - 14vw)}.entry-invitation{font-size:8px;line-height:1.8;padding-bottom:8px;margin-bottom:12px;max-width:280px}.console-preferences{flex-direction:row;gap:8px;margin-bottom:15px}.segmented{padding:3px;gap:1px}.segmented button{min-width:59px;min-height:30px;padding:7px 8px;font-size:7px;gap:5px}.screen-enter{min-height:43px;padding:12px 17px;font-size:8px;width:205px}.city-coordinates{bottom:3vh;min-height:216px}.city-name{margin-bottom:8px}}
+@media(max-height:500px) and (orientation:landscape){.city-coordinates{width:230px;min-height:212px;padding:12px 15px}.city-coordinates dl>div{padding-block:6px}.city-name{margin-bottom:8px}.weather-main{margin-top:7px}#weather-temperature{font-size:22px}.weather-source{margin-top:8px}}
+
+/* Moonlit Earth sky at the entrance; the planets appear after entering space. */
+.galaxy{background:radial-gradient(ellipse at 77% 37%,#17245d70 0,transparent 48%),linear-gradient(150deg,#01031a 0%,#03082c 55%,#07113d 100%)}
+.galaxy-nebula{background:radial-gradient(ellipse at 80% 68%,#1b2d7122,transparent 52%),radial-gradient(ellipse at 35% 100%,#15245624,transparent 45%)}
+.night-moon{position:fixed;right:9vw;top:22vh;width:clamp(220px,27vw,390px);aspect-ratio:1;z-index:0;pointer-events:none;background:url('assets/moon-night-v1.png') center/contain no-repeat;opacity:.9;transition:opacity 1s ease;animation:moonlight 14s ease-in-out infinite alternate}
+html[data-theme=light] .night-moon,html[data-experience=entered] .night-moon{opacity:0;visibility:hidden}
+@keyframes moonlight{from{filter:brightness(.94)}to{filter:brightness(1.03)}}
+@media(max-width:760px){.night-moon{width:clamp(150px,33vw,200px);right:5vw;top:19vh}}
+@media(max-width:760px) and (max-height:720px) and (orientation:portrait){.night-moon{width:25vw;right:0;top:0}}
+@media(max-height:500px) and (orientation:landscape){.night-moon{width:170px;right:28vw;top:15vh}}
+@media(prefers-reduced-motion:reduce){.night-moon{animation:none;transition:none}}
+
+/* Warm sunlight enters from beyond the top-right edge of the clear sky. */
+.day-sky:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 103% -3%,#fffef5 0%,#fff3cbd9 5%,#ffe0a596 12%,#ffd28942 23%,transparent 46%),conic-gradient(from 180deg at 100% 0%,transparent 0deg 8deg,#fff1be20 11deg,transparent 17deg 24deg,#ffe3a42e 28deg,transparent 35deg 43deg,#fff1c326 48deg,transparent 55deg 64deg,#ffdfa129 69deg,transparent 77deg 82deg,#fff0c31c 86deg,transparent 92deg 360deg);mask-image:linear-gradient(to bottom left,#000 0%,#000 18%,transparent 88%);filter:blur(4px);opacity:.95;animation:sunlight-breathe 16s ease-in-out infinite alternate}
+@keyframes sunlight-breathe{from{opacity:.8}to{opacity:1}}
+@media(max-width:760px){.day-sky:before{background-size:130% 100%;background-position:right top;filter:blur(3px)}}
+@media(prefers-reduced-motion:reduce){.day-sky:before{animation:none}}
+
+/* The first screen stays quiet; the constellation cursor starts inside space. */
+html.constellation-cursor,html.constellation-cursor *{cursor:url('assets/polaris-cursor-v2.svg') 16 16,crosshair!important}
+#constellation-trail{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;overflow:hidden;pointer-events:none!important;z-index:2147483646;box-shadow:none;outline:none}
+#constellation-trail::backdrop{background:transparent;pointer-events:none}
+#cursor-stars{display:block;width:100%;height:100%;pointer-events:none}
+.galaxy-nebula{translate:calc(var(--space-x,0px)*-.45) calc(var(--space-y,0px)*-.45)}
+@media(prefers-reduced-motion:reduce){#constellation-trail{display:none!important}.galaxy-nebula{translate:none}}
+
+/* Generous hit areas keep even Mercury easy to name and select. */
+.planet-button{min-width:44px;min-height:44px}.planet-tag{z-index:40;font-size:11px;font-weight:500;line-height:1.4;padding:8px 12px;box-shadow:0 6px 25px #01071866}
+@media(max-width:760px){.planet-tag{font-size:10px;padding:7px 10px}}
+#about-title em{display:inline-block;max-width:100%;font-size:.8em;line-height:1.2;text-wrap:balance}

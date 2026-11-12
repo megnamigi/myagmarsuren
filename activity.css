@@ -1,0 +1,20 @@
+.github-activity{position:relative;isolation:isolate;margin-top:42px;padding:30px 30px 0;border:1px solid #3fb95088;border-radius:20px;background:radial-gradient(ellipse at 100% 0,#23863630,transparent 65%),#0d1712;box-shadow:0 18px 55px #0003,inset 0 1px 0 #7ee78718;color:#f0f6f2}
+.github-activity::before{content:"";position:absolute;inset:0 26% auto;height:2px;background:linear-gradient(90deg,transparent,#7ee787,transparent);pointer-events:none}
+.activity-heading{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:26px}
+.activity-title-group{display:flex;align-items:center;gap:17px;min-width:0}
+.activity-mark{display:grid;place-items:center;flex:none;width:52px;height:52px;border:1px solid #3fb95066;border-radius:15px;background:#23863622;color:#7ee787}
+.activity-mark svg{width:30px;height:30px}
+.activity-heading h3{font:750 clamp(23px,2.3vw,32px)/1.2 var(--sans);letter-spacing:-.035em;margin:0 0 8px;color:#f0f6f2}
+.activity-heading p{font:13px/1.6 var(--sans);color:#aebfb4;margin:0}
+.activity-handle{flex:none;padding:9px 13px;border:1px solid #3fb95055;border-radius:30px;background:#2386361a;font:11px var(--mono);color:#7ee787}
+.activity-profile{display:block;border-radius:12px}
+.github-graph{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#23863677 #e6f0e9;min-height:130px;padding:22px 18px;border:1px solid #c8ded0;border-radius:12px;background:#fff;box-shadow:0 6px 22px #0002}
+.github-graph img{display:block;width:100%;min-width:640px;height:auto;filter:none}
+#github-activity-status{font:13px/1.7 var(--sans);color:#344d3e;padding:30px 0;margin:0}
+.activity-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:21px 0;font:12px var(--mono);color:#a8d7b4;transition:color .2s}
+.activity-footer>span:last-child{display:grid;place-items:center;width:29px;height:29px;border:1px solid #3fb95066;border-radius:50%;background:#23863624;color:#7ee787}
+.activity-profile:hover .activity-footer{color:#7ee787}
+.activity-profile:focus-visible{outline:2px solid #7ee787;outline-offset:7px}
+html[data-theme=light] .github-activity{border-color:#2386368a;background:radial-gradient(ellipse at 100% 0,#23863630,transparent 65%),#0d1712;box-shadow:0 14px 35px #16372426}
+@media(max-width:760px){.github-activity{margin-top:30px;padding:22px 18px 0;border-radius:16px}.activity-heading{align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:20px}.activity-title-group{gap:12px}.activity-mark{width:42px;height:42px;border-radius:12px}.activity-mark svg{width:25px;height:25px}.activity-heading h3{font-size:23px}.activity-heading p{font-size:11px}.activity-handle{font-size:10px;padding:7px 11px}.activity-footer{font-size:10px;padding:16px 0}.github-graph{min-height:110px;padding:16px 12px}}
+@media(prefers-reduced-motion:reduce){.activity-footer{transition:none}}

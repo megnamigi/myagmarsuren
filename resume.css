@@ -1,0 +1,7 @@
+.resume-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:24px;margin-top:0}
+.resume-title{display:flex;align-items:center;gap:13px;font:550 20px var(--sans);color:var(--text)}
+.resume-title svg{width:23px;height:23px;color:var(--accent)}
+.resume-status{font:11px var(--mono);color:var(--muted);padding:8px 12px;border:1px solid var(--line);border-radius:20px}
+@media(max-width:760px){.resume-row{padding-top:20px}.resume-title{font-size:18px}}
+
+.resume-row{border-radius:6px;transition:color .2s}.resume-row:hover .resume-title{color:var(--accent)}.resume-status{display:flex;align-items:center;gap:10px;color:var(--text);transition:background .2s,border-color .2s}.resume-row:hover .resume-status{background:var(--panel);border-color:var(--accent)}.resume-row:focus-visible{outline:2px solid var(--accent);outline-offset:7px}

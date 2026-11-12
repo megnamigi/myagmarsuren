@@ -1,0 +1,52 @@
+/* Earth in daylight; a shared globe connects the journey into space. */
+.sr-only{position:absolute;top:0;left:0;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
+.day-sky{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#a9d8fb url('assets/clear-sky-day.png') right center/cover no-repeat;opacity:0;visibility:hidden;overflow:hidden}
+.day-sky:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#d6eeffb0 0,#d8efff36 48%,transparent 80%),linear-gradient(0deg,#e8f6ff7d 0,transparent 60%)}
+.day-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 80% 90%,#f5fbff55 0,transparent 50%);animation:clear-sky-drift 70s ease-in-out infinite alternate;transform-origin:center bottom}
+html[data-theme=light]{--bg:#def0ff;--panel:#d5eaff;--text:#123454;--muted:#315a7b;--line:#6095b657;--accent:#235d97;--ink:#ffffff}
+html[data-theme=light] .day-sky{opacity:1;visibility:visible}
+html[data-theme=light] .landing-screen:before{opacity:.22}
+html[data-theme=light] .screen-role,html[data-theme=light] .screen-identity h1{text-shadow:0 1px 10px #f3fbff1a}
+html[data-theme=light] .screen-stack>.stack-art{display:none}
+html[data-theme=light] .solar-system{display:block}
+html[data-theme=light] .planet-position:not(.planet-earth),html[data-theme=light] .orbital-path,html[data-theme=light] .space-dust{display:none}
+html[data-theme=light] .planet-earth{left:210px;top:90px;width:320px;height:320px;--float-period:32s}
+html[data-theme=light] .earth-sprite{filter:drop-shadow(8px 22px 20px #245a8a23)}
+html[data-theme=light] .screen-stack .project-index{background:#f3faff65;backdrop-filter:blur(14px);left:0;right:auto;bottom:0;top:auto}
+html[data-theme=light] .screen-enter{background:#153e6bf0;color:#f1f8ff;box-shadow:0 6px 25px #39638314}
+html[data-theme=light] .segmented{background:#eaf7ff40;backdrop-filter:blur(10px)}
+html[data-theme=light] .segmented button.active{background:#153e6be8;color:#f5fbff}
+html[data-theme=light] .site-panel,html[data-theme=light] .project-dialog{background:#e8f5ff}
+.solar-system{--scene-scale:.83}
+.planet-sprite,.small-planet{display:block}
+.planet-button{position:relative;width:100%;height:100%;display:block;padding:0;border:0;border-radius:50%;background:transparent;pointer-events:auto;cursor:pointer;touch-action:manipulation;transform:scale(1);transition:transform .7s cubic-bezier(.18,.7,.22,1),filter .6s ease;outline-offset:4px}
+.planet-position:has(.planet-button:hover),.planet-position:has(.planet-button:focus-visible),.planet-position.is-selected{animation-play-state:paused;z-index:25}
+.planet-button:hover,.planet-button:focus-visible,.planet-button[aria-pressed=true]{transform:scale(1.13);filter:drop-shadow(0 0 14px #90baff30)}
+.planet-button:focus-visible{outline:1px solid #99bfff88;outline-offset:2px}
+.planet-tag{position:absolute;left:50%;top:98%;z-index:40;transform:translate(-50%,calc(9px / var(--scene-scale))) scale(.96);opacity:0;pointer-events:none;white-space:nowrap;line-height:1.2;font-family:var(--mono);font-size:calc(10px / var(--scene-scale));letter-spacing:.03em;padding:calc(7px / var(--scene-scale)) calc(10px / var(--scene-scale));border:1px solid #6c94d35c;border-radius:calc(5px / var(--scene-scale));background:#0a1730e6;color:#eaf2ff;box-shadow:0 6px 22px #01050d20;backdrop-filter:blur(10px);transition:opacity .3s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.planet-button:hover .planet-tag,.planet-button:focus-visible .planet-tag,.planet-button[aria-pressed=true] .planet-tag{opacity:1;transform:translate(-50%,calc(5px / var(--scene-scale))) scale(1)}
+html[data-theme=light] .planet-tag{color:#153c65;background:#edf8fff2;border-color:#8bb9ddbd;box-shadow:0 5px 18px #365f8424}
+.planet-earth .earth-sprite{view-transition-name:earth-globe}
+.journey-launch{display:none;position:absolute;bottom:15px;right:0;z-index:30;align-items:center;justify-content:space-between;gap:22px;padding:14px 18px;border:1px solid var(--line);border-radius:30px;background:#f2faff80;backdrop-filter:blur(10px);color:#214d78;font:9px var(--mono);letter-spacing:.04em;max-width:270px;transition:background .3s,transform .3s}
+.journey-launch>span:last-child{font-size:17px;line-height:1}.journey-launch:hover{background:#f6fbffcc;transform:translateY(-2px)}
+html[data-theme=light] .journey-launch{display:flex}
+html[data-journey=launch]::view-transition-old(root){animation:leave-atmosphere .9s cubic-bezier(.3,0,.2,1) both}
+html[data-journey=launch]::view-transition-new(root){animation:enter-cosmos 1.15s cubic-bezier(.16,.72,.22,1) both}
+html[data-journey=land]::view-transition-old(root){animation:leave-cosmos .8s ease both}
+html[data-journey=land]::view-transition-new(root){animation:return-home 1.1s cubic-bezier(.16,.72,.22,1) both}
+::view-transition-group(earth-globe){animation-duration:1.15s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+::view-transition-old(earth-globe),::view-transition-new(earth-globe){height:100%;mix-blend-mode:normal}
+@keyframes leave-atmosphere{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(25px) scale(1.025)}}
+@keyframes enter-cosmos{from{opacity:0;transform:translateY(-15px) scale(1.035)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes leave-cosmos{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.025)}}
+@keyframes return-home{from{opacity:0;transform:translateY(-20px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes clear-sky-drift{from{transform:translate3d(-1%,0,0) scale(1.02);opacity:.7}to{transform:translate3d(1%,0,0) scale(1.06);opacity:1}}
+@media(min-height:880px) and (min-width:1101px){.solar-system{--scene-scale:1}}
+@media(max-height:800px) and (min-width:761px){.solar-system{--scene-scale:.68}}
+@media(max-height:680px) and (min-width:761px){.solar-system{--scene-scale:.56}.journey-launch{font-size:8px;padding:11px 14px;max-width:230px;bottom:3px}html[data-theme=light] .planet-earth{top:60px}}
+@media(max-width:760px){.solar-system{--scene-scale:.4}.day-sky{background-position:right center}.day-sky:after{background:linear-gradient(0deg,#e2f3ffc2,transparent 80%)}.journey-launch{bottom:0;right:50%;transform:translateX(50%);font-size:8px;padding:11px 14px;white-space:nowrap;max-width:100%;gap:14px}.journey-launch:hover{transform:translateX(50%) translateY(-2px)}html[data-theme=light] .screen-stack .project-index{top:8px;bottom:auto;right:0;left:auto}.planet-tag{font-size:calc(10px / var(--scene-scale))}}
+@media(max-height:720px) and (max-width:760px){.solar-system{--scene-scale:.28}html[data-theme=light] .planet-earth{width:250px;height:250px;left:235px;top:40px}.journey-launch{font-size:7px;padding:9px 12px;gap:10px}}
+@media(max-width:380px){.solar-system{--scene-scale:.35}}
+@media(max-width:380px) and (max-height:720px){.solar-system{--scene-scale:.25}}
+@media(max-height:450px) and (orientation:landscape){.solar-system{--scene-scale:.27}.journey-launch{max-width:200px;right:0;transform:none;padding:8px 10px;font-size:7px}html[data-theme=light] .planet-earth{width:250px;height:250px;top:20px;left:240px}.journey-launch:hover{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){.planet-button,.planet-tag{transition:none}.day-haze{animation:none}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation-duration:0s!important}}
