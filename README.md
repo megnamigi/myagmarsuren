@@ -24,7 +24,7 @@ Then open http://127.0.0.1:4173/.
 
 ## Deployment
 
-Vercel project: `myagmarsuren`. Serve the repository root with the Other framework preset; no installation or build step is needed. Pushes to the repository’s production branch are deployed automatically once Git integration is connected.
+Vercel project: `myagmarsuren`. Serve the repository root with the Other framework preset; no installation or build step is needed. Vercel is connected to this repository. Pushes to the production branch `codex/portfolio` are deployed automatically.
 
 The resume is stored at `assets/resume/myagmarsuren-resume-mn.pdf`.
 
